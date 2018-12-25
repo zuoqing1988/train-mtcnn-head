@@ -89,7 +89,10 @@ def gen_data_for_one_image(size, idx, img, pos_save_dir,neg_save_dir,part_save_d
         nx = npr.randint(0, width - cur_size)
         ny = npr.randint(0, height - cur_size)
         crop_box = np.array([nx, ny, nx + cur_size, ny + cur_size])
-        Iou = IoU(crop_box, boxes)
+        if boxes.shape[0] == 0:
+            Iou = 0
+        else:
+            Iou = IoU(crop_box, boxes)
 
         cropped_im = img[ny : ny + cur_size, nx : nx + cur_size, :]
         resized_im = cv2.resize(cropped_im, (size, size), interpolation=cv2.INTER_LINEAR)
