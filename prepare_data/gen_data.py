@@ -84,7 +84,7 @@ def gen_data_for_one_image(size, idx, img, pos_save_dir,neg_save_dir,part_save_d
     
     width = img.shape[1]
     height = img.shape[0]
-    while neg_num < base_num*50:
+    while neg_num < base_num*5:
         cur_size = npr.randint(size, min(width, height) / 2)
         nx = npr.randint(0, width - cur_size)
         ny = npr.randint(0, height - cur_size)
@@ -112,11 +112,11 @@ def gen_data_for_one_image(size, idx, img, pos_save_dir,neg_save_dir,part_save_d
 
         # ignore small faces
         # in case the ground truth boxes of small faces are not accurate
-        if max(w, h) < 40 or x1 < 0 or y1 < 0 or prob < prob_thresh:
+        if max(w, h) < 30 or x1 < 0 or y1 < 0 or prob < prob_thresh:
             continue
 
         # generate negative examples that have overlap with gt
-        for i in range(base_num*6):
+        for i in range(base_num*1):
             cur_size = npr.randint(size,  min(width, height) / 2)
             # delta_x and delta_y are offsets of (x1, y1)
             delta_x = npr.randint(max(-cur_size, -x1), w)
@@ -139,7 +139,7 @@ def gen_data_for_one_image(size, idx, img, pos_save_dir,neg_save_dir,part_save_d
                     neg_num += 1
 
         # generate positive examples and part faces
-        for i in range(base_num*25):
+        for i in range(base_num*3):
             cur_size = npr.randint(int(min(w, h) * 0.8), np.ceil(1.25 * max(w, h)))
 
             # delta here is the offset of box center
