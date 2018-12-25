@@ -39,19 +39,21 @@ def P_Net20(mode='train'):
     #cur size: 1x1
 
     conv4_1 = mx.symbol.Convolution(data=prelu4_dw, kernel=(1, 1), num_filter=2, name="conv4_1")
+    bn4_1 = mx.sym.BatchNorm(data=conv4_1, name='bn4_1', fix_gamma=False,momentum=0.9)
     conv4_2 = mx.symbol.Convolution(data=prelu4_dw, kernel=(1, 1), num_filter=4, name="conv4_2")
+    bn4_2 = mx.sym.BatchNorm(data=conv4_2, name='bn4_2', fix_gamma=False,momentum=0.9)
 
     if mode == 'test':
-        cls_prob = mx.symbol.SoftmaxActivation(data=conv4_1, mode="channel", name="cls_prob")
-        bbox_pred = conv4_2
+        cls_prob = mx.symbol.SoftmaxActivation(data=bn4_1, mode="channel", name="cls_prob")
+        bbox_pred = bn4_2
         group = mx.symbol.Group([cls_prob, bbox_pred])
         
     else:
-        conv4_1_reshape = mx.symbol.Reshape(data = conv4_1, shape=(-1, 2), name="conv4_1_reshape")
+        conv4_1_reshape = mx.symbol.Reshape(data = bn4_1, shape=(-1, 2), name="conv4_1_reshape")
         cls_prob = mx.symbol.SoftmaxOutput(data=conv4_1_reshape, label=label,
                                            multi_output=True, use_ignore=True,
                                            name="cls_prob")
-        conv4_2_reshape = mx.symbol.Reshape(data = conv4_2, shape=(-1, 4), name="conv4_2_reshape")
+        conv4_2_reshape = mx.symbol.Reshape(data = bn4_2, shape=(-1, 4), name="conv4_2_reshape")
         bbox_pred = mx.symbol.LinearRegressionOutput(data=conv4_2_reshape, label=bbox_target,
                                                      grad_scale=1, name="bbox_pred")
 
@@ -100,16 +102,17 @@ def R_Net(mode='train'):
     prelu5_dw = mx.symbol.LeakyReLU(data=bn5_dw, act_type="prelu", name="prelu5_dw")
 	
     conv5_1 = mx.symbol.FullyConnected(data=prelu5_dw, num_hidden=2, name="conv5_1")
+    bn5_1 = mx.sym.BatchNorm(data=conv5_1, name='bn5_1', fix_gamma=False,momentum=0.9)
     conv5_2 = mx.symbol.FullyConnected(data=prelu5_dw, num_hidden=4, name="conv5_2")
+    bn5_2 = mx.sym.BatchNorm(data=conv5_2, name='bn5_2', fix_gamma=False,momentum=0.9)
 
-    cls_prob = mx.symbol.SoftmaxOutput(data=conv5_1, label=label, use_ignore=True,
+    cls_prob = mx.symbol.SoftmaxOutput(data=bn5_1, label=label, use_ignore=True,
                                        name="cls_prob")
     if mode == 'test':
-        cls_prob = mx.symbol.SoftmaxOutput(data=conv5_1, label=label, use_ignore=True, name="cls_prob")
-        bbox_pred = conv5_2
+        bbox_pred = bn5_2
         group = mx.symbol.Group([cls_prob, bbox_pred])
     else:
-        bbox_pred = mx.symbol.LinearRegressionOutput(data=conv5_2, label=bbox_target,
+        bbox_pred = mx.symbol.LinearRegressionOutput(data=bn5_2, label=bbox_target,
                                                      grad_scale=1, name="bbox_pred")
 
         out = mx.symbol.Custom(cls_prob=cls_prob, label=label, bbox_pred=bbox_pred, bbox_target=bbox_target, 
