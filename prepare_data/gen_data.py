@@ -84,7 +84,7 @@ def gen_data_for_one_image(size, idx, img, pos_save_dir,neg_save_dir,part_save_d
     
     width = img.shape[1]
     height = img.shape[0]
-    while neg_num < base_num*5:
+    while neg_num < base_num*3:
         cur_size = npr.randint(size, min(width, height) / 2)
         nx = npr.randint(0, width - cur_size)
         ny = npr.randint(0, height - cur_size)
@@ -112,7 +112,7 @@ def gen_data_for_one_image(size, idx, img, pos_save_dir,neg_save_dir,part_save_d
 
         # ignore small faces
         # in case the ground truth boxes of small faces are not accurate
-        if max(w, h) < 30 or x1 < 0 or y1 < 0 or prob < prob_thresh:
+        if max(w, h) < 20 or x1 < 0 or y1 < 0 or prob < prob_thresh:
             continue
 
         # generate negative examples that have overlap with gt
@@ -172,7 +172,7 @@ def gen_data_for_one_image(size, idx, img, pos_save_dir,neg_save_dir,part_save_d
                     pos_num += 1
                 
             elif IoU(crop_box, box_) >= 0.4:
-                if npr.randint(100) <= 40:
+                if npr.randint(100) <= 50:
                     save_file = '%s/%d_%d.jpg'%(part_save_dir,idx,part_num)
                     if cv2.imwrite(save_file, resized_im):
                         line = '%s/%d_%d -1 %.2f %.2f %.2f %.2f'%(part_save_dir,idx,part_num,offset_x1, offset_y1, offset_x2, offset_y2)
