@@ -184,7 +184,7 @@ def gen_hard_minibatch_thread(size, start_idx, annotation_lines, det_boxes, neg_
     neg_hard_names = list()
     for i in range(num_images):
         cur_annotation_line = annotation_lines[i].strip().split(' ')
-        im_path = cur_annotation_line[0]
+        im_path = '%s/data/HollywoodHeads/JPEGImages/'%config.root+cur_annotation_line[0]
         bbox = map(float, cur_annotation_line[1:])
         boxes = np.array(bbox, dtype=np.float32).reshape(-1, 4)
         img = cv2.imread(im_path)
@@ -273,7 +273,7 @@ if __name__ == '__main__':
     detections = test_net(args.root_path, args.dataset_path, args.image_set, prefix, epoch, batch_size, ctx, 
             test_mode, thresh, args.min_face)
     
-    anno_file = "%s/prepare_data/wider_annotations/anno.txt"%config.root
+    anno_file = "%s/prepare_data/annotations/anno.txt"%config.root
     with open(anno_file, 'r') as f:
         annotation_lines = f.readlines()
 		
