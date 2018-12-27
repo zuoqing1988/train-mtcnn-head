@@ -215,7 +215,10 @@ def gen_hard_for_one_image(size, idx, img, det_boxes, gt_boxes,  neg_hard_save_d
             continue
 
         # compute intersection over union(IoU) between current box and all gt boxes
-        Iou = IoU(box, gt_boxes)
+        if gt_boxes.shape[0] == 0:
+            Iou = 0
+        else:
+            Iou = IoU(box, gt_boxes)
         cropped_im = img[y_top:y_bottom + 1, x_left:x_right + 1, :]
         resized_im = cv2.resize(cropped_im, (size, size), interpolation=cv2.INTER_LINEAR)
 
