@@ -15,7 +15,7 @@ def transform(im, train = False):
     :return: [batch, channel, height, width]
     """
     if train:
-        scale = np.random.randint(3,7) * 0.2
+        scale = np.random.randint(5,7) * 0.2
         im = im * scale
         if config.enable_gray:
             gray_flag = np.random.randint(0,2)
