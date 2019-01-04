@@ -10,7 +10,7 @@ from tools.load_model import load_param
 from core.MtcnnDetector20 import MtcnnDetector
 
 
-def test_net(prefix, epoch, batch_size, ctx,
+def test_net(imgfile,prefix, epoch, batch_size, ctx,
              thresh=[0.6, 0.6, 0.7], min_face_size=24):
 
     detectors = [None, None, None]
@@ -27,13 +27,13 @@ def test_net(prefix, epoch, batch_size, ctx,
 
     # load onet model
     args, auxs = load_param(prefix[2], epoch[2], convert=True, ctx=ctx)
-    ONet = Detector(O_Net("test",False), 48, batch_size[2], ctx, args, auxs)
+    ONet = Detector(O_Net("test"), 48, batch_size[2], ctx, args, auxs)
     detectors[2] = ONet
 
     mtcnn_detector = MtcnnDetector(detectors=detectors, ctx=ctx, min_face_size=min_face_size,
                                    stride=4, threshold=thresh, slide_window=False)
 
-    img = cv2.imread('4.jpg')
+    img = cv2.imread(imgfile)
     t1 = time.time()
 
     boxes, boxes_c = mtcnn_detector.detect_pnet20(img)
@@ -46,9 +46,9 @@ def test_net(prefix, epoch, batch_size, ctx,
         draw = img.copy()
         font = cv2.FONT_HERSHEY_SIMPLEX
         for b in boxes_c:
-            cv2.rectangle(draw, (int(b[0]), int(b[1])), (int(b[2]), int(b[3])), (0, 255, 255), 1)
-            cv2.putText(draw, '%.3f'%b[4], (int(b[0]), int(b[1])), font, 0.4, (255, 255, 255), 1)
-
+            cv2.rectangle(draw, (int(b[0]), int(b[1])), (int(b[2]), int(b[3])), (0, 0, 255), 1)
+            cv2.putText(draw, '%.3f'%b[4], (int(b[0]), int(b[1])), font, 0.4, (0, 0, 255), 1)
+        cv2.imwrite('demoresult.jpg',draw)
         cv2.imshow("detection result", draw)
         cv2.waitKey(0)
 
@@ -57,6 +57,8 @@ def test_net(prefix, epoch, batch_size, ctx,
 def parse_args():
     parser = argparse.ArgumentParser(description='Test mtcnn',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('--imgfile', dest='imgfile', help='image filename', 
+                        default='4.jpg', type=str)
     parser.add_argument('--prefix', dest='prefix', help='prefix of model name', nargs="+",
                         default='model/pnet20_hard,model/rnet,model/onet', type=str)
     parser.add_argument('--epoch', dest='epoch', help='epoch number of model to load',
@@ -83,4 +85,4 @@ if __name__ == '__main__':
     epoch = [int(i) for i in args.epoch.split(',')]
     batch_size = [int(i) for i in args.batch_size.split(',')]
     thresh = [float(i) for i in args.thresh.split(',')]
-    test_net(prefix, epoch, batch_size, ctx, thresh, args.min_face)
+    test_net(args.imgfile,prefix, epoch, batch_size, ctx, thresh, args.min_face)

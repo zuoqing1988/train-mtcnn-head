@@ -1,0 +1,1 @@
+python demo20.py --epoch 16,16,4 --imgfile head5.jpg
