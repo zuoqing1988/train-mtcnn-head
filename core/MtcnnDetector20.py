@@ -421,7 +421,7 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
 
         boxes_c = self.calibrate_box(boxes, reg)
 
-        keep = py_nms(boxes_c, 0.7, "Minimum")
+        keep = py_nms(boxes_c, 0.5, "Minimum")
         boxes_c = boxes_c[keep]
 
         return boxes, boxes_c
