@@ -41,7 +41,8 @@ def test_net(imgfile,prefix, epoch, batch_size, ctx,
     boxes, boxes_c = mtcnn_detector.detect_onet(img, boxes_c)
 
     print 'time: ',time.time() - t1
-
+    num = len(boxes_c)
+    print 'found: %d'%num
     if boxes_c is not None:
         draw = img.copy()
         font = cv2.FONT_HERSHEY_SIMPLEX
@@ -66,7 +67,7 @@ def parse_args():
     parser.add_argument('--batch_size', dest='batch_size', help='list of batch size used in prediction', 
                         default='2048,256,16', type=str)
     parser.add_argument('--thresh', dest='thresh', help='list of thresh for pnet, rnet, onet', 
-                        default='0.5,0.5,0.7', type=str)
+                        default='0.5,0.5,0.85', type=str)
     parser.add_argument('--min_face', dest='min_face', help='minimum face size for detection',
                         default=20, type=int)
     parser.add_argument('--gpu', dest='gpu_id', help='GPU device to train with',

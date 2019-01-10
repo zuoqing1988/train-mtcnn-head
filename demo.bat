@@ -1,1 +1,1 @@
-python demo20.py --epoch 16,16,4 --imgfile head5.jpg
+python demo20.py --epoch 16,16,16 --imgfile head5.jpg --thresh 0.4,0.5,0.75 --min_face 20
