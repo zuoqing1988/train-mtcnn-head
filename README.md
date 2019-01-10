@@ -6,6 +6,7 @@
 
 训练好的模型等待[ZQCNN](https://github.com/zuoqing1988/ZQCNN)达到600星才公布
 
+（在新标签打开下图，用放大镜看）
 ![demoresult.jpg](https://github.com/zuoqing1988/train-mtcnn-head/blob/master/demoresult.jpg)
 
 
