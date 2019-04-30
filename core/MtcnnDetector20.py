@@ -427,7 +427,7 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
         return boxes, boxes_c
 
 
-    def detect_face(self, imdb, test_data, vis):
+    def detect_face(self, imdb, test_data, vis, mode = 'test'):
         """Detect face over image
 
         Parameters:
@@ -492,7 +492,10 @@ face candidates:%d, current batch_size:%d"%(num_boxes, batch_size)
                 t = time.time()
                 print "time cost " + '{:.3f}'.format(t1+t2+t3) + '  pnet {:.3f}  rnet {:.3f}  onet {:.3f}'.format(t1, t2, t3)
 
-            all_boxes.append(boxes_c)
+            if mode == 'train':
+                all_boxes.append(boxes)
+            else:
+                all_boxes.append(boxes_c)
             batch_idx += 1
         # save detections into fddb format
 #        imdb.write_results(all_boxes)

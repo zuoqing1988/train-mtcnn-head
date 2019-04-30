@@ -47,7 +47,7 @@ class MyThread_gen(threading.Thread):
 
 def test_net_thread(imdb, mtcnn_detector):
     test_data = TestLoader(imdb)
-    detections = mtcnn_detector.detect_face(imdb, test_data, vis=False)
+    detections = mtcnn_detector.detect_face(imdb, test_data, vis=False, mode='train')
     return detections
 
 def creat_mtcnn_detector(prefix, epoch, batch_size, test_mode, thresh, min_face_size, ctx):
